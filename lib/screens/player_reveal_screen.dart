@@ -63,7 +63,7 @@ class _PlayerRevealScreenState extends State<PlayerRevealScreen> {
             current: _currentIndex + 1,
             total: _players.length,
           ),
-          SizedBox(height: sh(context, 14)),
+          SizedBox(height: sh(context, 18)),
           Expanded(
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 180),
@@ -187,6 +187,7 @@ class _Prompt extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        SizedBox(height: sh(context, 22)),
         _HeroTitle(
           language: language,
           title: nt(language, hi: 'गुप्त रिवील', en: 'Private Reveal'),
@@ -244,6 +245,7 @@ class _Reveal extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        SizedBox(height: sh(context, 20)),
         _HeroTitle(
           language: language,
           title: isImposter
@@ -353,6 +355,7 @@ class _Transition extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        SizedBox(height: sh(context, 24)),
         _HeroTitle(
           language: language,
           title: nt(language, hi: 'फोन पास करें', en: 'Pass the Phone'),
@@ -401,6 +404,7 @@ class _Complete extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        SizedBox(height: sh(context, 24)),
         _HeroTitle(
           language: language,
           title: nt(language, hi: 'सभी तैयार', en: 'All Ready'),

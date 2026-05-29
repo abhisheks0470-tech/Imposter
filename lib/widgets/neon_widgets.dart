@@ -147,7 +147,6 @@ class NeonHeader extends StatelessWidget {
             NeonIconButton(
               key: const ValueKey('header_back_button'),
               icon: Icons.arrow_back_rounded,
-              assetPath: PremiumAssets.iconBack,
               onTap: onBack!,
             )
           else
