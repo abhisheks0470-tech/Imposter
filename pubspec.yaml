@@ -62,12 +62,6 @@ flutter:
     - assets/imposter/single3.webp
     - assets/imposter/icons/
     - assets/imposter/category/
-    - assets/imposter/words/food/
-    - assets/imposter/words/animals/
-    - assets/imposter/words/places/
-    - assets/imposter/words/movies/
-    - assets/imposter/words/objects/
-    - assets/imposter/words/custom/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
