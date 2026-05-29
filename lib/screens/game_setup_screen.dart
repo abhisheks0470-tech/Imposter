@@ -40,9 +40,9 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
           ),
           SizedBox(height: sh(context, 18)),
           StepperPills(language: language, current: 1),
-          SizedBox(height: sh(context, 10)),
+          SizedBox(height: sh(context, 8)),
           SizedBox(
-            height: sh(context, 185).clamp(56, 95),
+            height: sh(context, 150).clamp(48, 82),
             child: Image.asset(
               PremiumAssets.mascotDetective,
               fit: BoxFit.contain,
@@ -103,7 +103,7 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
                     onChanged: (category) =>
                         setState(() => _category = category),
                   ),
-                  SizedBox(height: sh(context, 10)),
+                  SizedBox(height: sh(context, 14)),
                   _OptionRow(
                     language: language,
                     wordImageEnabled: _wordImageEnabled,
@@ -263,39 +263,51 @@ class _CategoryStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: sh(context, 440).clamp(235, 310),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            nt(language, hi: 'कैटेगरी', en: 'Category'),
-            style: NeonTheme.title(context, language, size: 34),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final gapX = sw(context, 12);
+        final gapY = sh(context, 10);
+        final cardSize = (constraints.maxWidth - gapX * 2) / 3;
+        final titleHeight = sp(context, 46);
+        final totalHeight = titleHeight + sh(context, 10) + cardSize * 2 + gapY;
+        return SizedBox(
+          height: totalHeight,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: titleHeight,
+                child: Text(
+                  nt(language, hi: 'कैटेगरी', en: 'Category'),
+                  style: NeonTheme.title(context, language, size: 34),
+                ),
+              ),
+              SizedBox(height: sh(context, 10)),
+              Expanded(
+                child: GridView.count(
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: 3,
+                  crossAxisSpacing: gapX,
+                  mainAxisSpacing: gapY,
+                  childAspectRatio: 1,
+                  children: [
+                    for (final category in CategoryOption.values)
+                      CategoryCard(
+                        key: ValueKey('choice_$category'),
+                        language: language,
+                        label: categoryLabel(category, language),
+                        icon: categoryIcon(category),
+                        assetPath: categoryAsset(category),
+                        selected: selected == category,
+                        onTap: () => onChanged(category),
+                      ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: sh(context, 10)),
-          Expanded(
-            child: GridView.count(
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 3,
-              crossAxisSpacing: sw(context, 12),
-              mainAxisSpacing: sh(context, 10),
-              childAspectRatio: 1,
-              children: [
-                for (final category in CategoryOption.values)
-                  CategoryCard(
-                    key: ValueKey('choice_$category'),
-                    language: language,
-                    label: categoryLabel(category, language),
-                    icon: categoryIcon(category),
-                    assetPath: categoryAsset(category),
-                    selected: selected == category,
-                    onTap: () => onChanged(category),
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

@@ -147,7 +147,6 @@ class NeonHeader extends StatelessWidget {
             NeonIconButton(
               key: const ValueKey('header_back_button'),
               icon: Icons.arrow_back_rounded,
-              assetPath: PremiumAssets.iconBack,
               onTap: onBack!,
             )
           else
@@ -690,7 +689,15 @@ class RevealCard extends StatelessWidget {
                           color: accent,
                           size: sp(context, danger ? 94 : 86),
                         )
-                      : Image.asset(visualAsset!, fit: BoxFit.contain),
+                      : Image.asset(
+                          visualAsset!,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) => Icon(
+                            icon,
+                            color: accent,
+                            size: sp(context, danger ? 94 : 86),
+                          ),
+                        ),
                 ),
               ),
             ),

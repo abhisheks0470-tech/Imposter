@@ -91,7 +91,9 @@ class ResultScreen extends StatelessWidget {
               value: _data.secretWord.label(_language),
               icon: _categoryIcon(_setup.category),
               showVisual: _setup.wordImageEnabled,
-              visualAsset: _categoryAsset(_setup.category),
+              visualAsset:
+                  _data.secretWord.imageAsset ??
+                  _categoryAsset(_setup.category),
             ),
           ),
           SizedBox(height: sh(context, 8)),

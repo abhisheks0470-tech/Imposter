@@ -15,7 +15,8 @@ double sh(BuildContext context, double value) {
 
 double sp(BuildContext context, double value) {
   final size = MediaQuery.sizeOf(context);
-  final factor = math.min(size.width / 1080, size.height / 1920);
+  final baseFactor = math.min(size.width / 1080, size.height / 1920);
+  final factor = size.shortestSide >= 600 ? size.width / 1080 : baseFactor;
   return value * factor.clamp(0.58, 1.05);
 }
 

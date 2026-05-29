@@ -37,12 +37,17 @@ class _PlayerRevealScreenState extends State<PlayerRevealScreen> {
   @override
   void initState() {
     super.initState();
-    final random = math.Random();
+    final random = math.Random(
+      DateTime.now().microsecondsSinceEpoch ^
+          Object.hashAll(widget.revealData.playerNames) ^
+          widget.revealData.setup.playersCount ^
+          widget.revealData.setup.imposterCount ^
+          widget.revealData.setup.category.index,
+    );
     final indexes = List.generate(_players.length, (index) => index)
       ..shuffle(random);
     _imposterIndexes = indexes.take(_setup.imposterCount).toSet();
-    final words = _wordsForCategory(_setup.category);
-    _secretWord = words[random.nextInt(words.length)];
+    _secretWord = _pickSecretWord(_setup.category, random);
   }
 
   @override
@@ -63,7 +68,7 @@ class _PlayerRevealScreenState extends State<PlayerRevealScreen> {
             current: _currentIndex + 1,
             total: _players.length,
           ),
-          SizedBox(height: sh(context, 14)),
+          SizedBox(height: sh(context, 18)),
           Expanded(
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 180),
@@ -138,6 +143,7 @@ class _PlayerRevealScreenState extends State<PlayerRevealScreen> {
             secretWord: SecretWordData(
               hindi: _secretWord.hindi,
               english: _secretWord.english,
+              imageAsset: _secretWord.imageAsset,
             ),
           ),
         ),
@@ -187,6 +193,7 @@ class _Prompt extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        SizedBox(height: sh(context, 22)),
         _HeroTitle(
           language: language,
           title: nt(language, hi: 'गुप्त रिवील', en: 'Private Reveal'),
@@ -244,6 +251,7 @@ class _Reveal extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        SizedBox(height: sh(context, 20)),
         _HeroTitle(
           language: language,
           title: isImposter
@@ -280,7 +288,7 @@ class _Reveal extends StatelessWidget {
             showVisual: isImposter || showWordImage,
             visualAsset: isImposter
                 ? PremiumAssets.mascotShhh
-                : _categoryAsset(category),
+                : word.imageAsset,
           ),
         ),
         if (isImposter)
@@ -353,6 +361,7 @@ class _Transition extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        SizedBox(height: sh(context, 24)),
         _HeroTitle(
           language: language,
           title: nt(language, hi: 'फोन पास करें', en: 'Pass the Phone'),
@@ -401,6 +410,7 @@ class _Complete extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        SizedBox(height: sh(context, 24)),
         _HeroTitle(
           language: language,
           title: nt(language, hi: 'सभी तैयार', en: 'All Ready'),
@@ -637,134 +647,392 @@ class _SecretWord {
     required this.hindi,
     required this.english,
     required this.icon,
+    required this.imageAsset,
   });
 
   final String hindi;
   final String english;
   final IconData icon;
+  final String imageAsset;
 
   String label(AppLanguage language) =>
       language == AppLanguage.hindi ? hindi : english;
 }
 
+final Map<CategoryOption, String> _lastWordByCategory = {};
+
+_SecretWord _pickSecretWord(CategoryOption category, math.Random random) {
+  final words = _wordsForCategory(category);
+  final lastWord = _lastWordByCategory[category];
+  final availableWords = words.length > 1
+      ? words.where((word) => word.hindi != lastWord).toList()
+      : words;
+  final selected = availableWords[random.nextInt(availableWords.length)];
+  _lastWordByCategory[category] = selected.hindi;
+  return selected;
+}
+
+List<_SecretWord> _wordList(
+  CategoryOption category,
+  IconData icon,
+  List<(String, String)> entries,
+) {
+  return [
+    for (final entry in entries)
+      _SecretWord(
+        hindi: entry.$1,
+        english: entry.$2,
+        icon: icon,
+        imageAsset:
+            'assets/imposter/words/${_categoryKey(category)}/${_wordAssetKey(entry.$2)}.png',
+      ),
+  ];
+}
+
 List<_SecretWord> _wordsForCategory(CategoryOption category) {
   return switch (category) {
-    CategoryOption.food => const [
-      _SecretWord(
-        hindi: 'समोसा',
-        english: 'Samosa',
-        icon: Icons.restaurant_rounded,
-      ),
-      _SecretWord(
-        hindi: 'पिज़्ज़ा',
-        english: 'Pizza',
-        icon: Icons.local_pizza_rounded,
-      ),
-      _SecretWord(
-        hindi: 'आइसक्रीम',
-        english: 'Ice Cream',
-        icon: Icons.icecream_rounded,
-      ),
-      _SecretWord(hindi: 'चाय', english: 'Tea', icon: Icons.local_cafe_rounded),
-      _SecretWord(
-        hindi: 'बर्गर',
-        english: 'Burger',
-        icon: Icons.lunch_dining_rounded,
-      ),
-    ],
-    CategoryOption.animals => const [
-      _SecretWord(hindi: 'शेर', english: 'Lion', icon: Icons.pets_rounded),
-      _SecretWord(hindi: 'हाथी', english: 'Elephant', icon: Icons.pets_rounded),
-      _SecretWord(hindi: 'बिल्ली', english: 'Cat', icon: Icons.pets_rounded),
-      _SecretWord(hindi: 'कुत्ता', english: 'Dog', icon: Icons.pets_rounded),
-      _SecretWord(hindi: 'बंदर', english: 'Monkey', icon: Icons.pets_rounded),
-    ],
-    CategoryOption.places => const [
-      _SecretWord(
-        hindi: 'स्कूल',
-        english: 'School',
-        icon: Icons.school_rounded,
-      ),
-      _SecretWord(
-        hindi: 'मंदिर',
-        english: 'Temple',
-        icon: Icons.temple_hindu_rounded,
-      ),
-      _SecretWord(hindi: 'पार्क', english: 'Park', icon: Icons.park_rounded),
-      _SecretWord(hindi: 'होटल', english: 'Hotel', icon: Icons.hotel_rounded),
-      _SecretWord(
-        hindi: 'रेलवे स्टेशन',
-        english: 'Railway Station',
-        icon: Icons.train_rounded,
-      ),
-    ],
-    CategoryOption.movies => const [
-      _SecretWord(hindi: 'हीरो', english: 'Hero', icon: Icons.movie_rounded),
-      _SecretWord(
-        hindi: 'विलेन',
-        english: 'Villain',
-        icon: Icons.theater_comedy_rounded,
-      ),
-      _SecretWord(
-        hindi: 'सिनेमा',
-        english: 'Cinema',
-        icon: Icons.local_movies_rounded,
-      ),
-      _SecretWord(
-        hindi: 'टिकट',
-        english: 'Ticket',
-        icon: Icons.confirmation_number_rounded,
-      ),
-      _SecretWord(
-        hindi: 'गाना',
-        english: 'Song',
-        icon: Icons.music_note_rounded,
-      ),
-    ],
-    CategoryOption.objects => const [
-      _SecretWord(
-        hindi: 'मोबाइल',
-        english: 'Mobile',
-        icon: Icons.phone_android_rounded,
-      ),
-      _SecretWord(hindi: 'कुर्सी', english: 'Chair', icon: Icons.chair_rounded),
-      _SecretWord(
-        hindi: 'किताब',
-        english: 'Book',
-        icon: Icons.menu_book_rounded,
-      ),
-      _SecretWord(hindi: 'घड़ी', english: 'Watch', icon: Icons.watch_rounded),
-      _SecretWord(hindi: 'बैग', english: 'Bag', icon: Icons.backpack_rounded),
-    ],
-    CategoryOption.custom => const [
-      _SecretWord(hindi: 'दोस्त', english: 'Friend', icon: Icons.group_rounded),
-      _SecretWord(
-        hindi: 'खेल',
-        english: 'Game',
-        icon: Icons.sports_esports_rounded,
-      ),
-      _SecretWord(
-        hindi: 'रहस्य',
-        english: 'Mystery',
-        icon: Icons.question_mark_rounded,
-      ),
-      _SecretWord(hindi: 'सवाल', english: 'Question', icon: Icons.help_rounded),
-      _SecretWord(
-        hindi: 'जवाब',
-        english: 'Answer',
-        icon: Icons.check_circle_rounded,
-      ),
-    ],
+    CategoryOption.food => _wordList(category, Icons.restaurant_rounded, const [
+      ('समोसा', 'Samosa'),
+      ('पिज़्ज़ा', 'Pizza'),
+      ('आइसक्रीम', 'Ice Cream'),
+      ('चाय', 'Tea'),
+      ('बर्गर', 'Burger'),
+      ('पानीपुरी', 'Pani Puri'),
+      ('डोसा', 'Dosa'),
+      ('इडली', 'Idli'),
+      ('वड़ा पाव', 'Vada Pav'),
+      ('पाव भाजी', 'Pav Bhaji'),
+      ('बिरयानी', 'Biryani'),
+      ('पुलाव', 'Pulao'),
+      ('दाल', 'Dal'),
+      ('रोटी', 'Roti'),
+      ('पराठा', 'Paratha'),
+      ('नान', 'Naan'),
+      ('छोले', 'Chole'),
+      ('राजमा', 'Rajma'),
+      ('कढ़ी', 'Kadhi'),
+      ('खिचड़ी', 'Khichdi'),
+      ('जलेबी', 'Jalebi'),
+      ('गुलाब जामुन', 'Gulab Jamun'),
+      ('रसगुल्ला', 'Rasgulla'),
+      ('लड्डू', 'Laddoo'),
+      ('कचौड़ी', 'Kachori'),
+      ('ढोकला', 'Dhokla'),
+      ('उपमा', 'Upma'),
+      ('पोहा', 'Poha'),
+      ('मोमोज', 'Momos'),
+      ('नूडल्स', 'Noodles'),
+      ('पास्ता', 'Pasta'),
+      ('सैंडविच', 'Sandwich'),
+      ('ऑमलेट', 'Omelette'),
+      ('सलाद', 'Salad'),
+      ('सूप', 'Soup'),
+      ('कॉफी', 'Coffee'),
+      ('लस्सी', 'Lassi'),
+      ('नींबू पानी', 'Lemonade'),
+      ('चॉकलेट', 'Chocolate'),
+      ('केक', 'Cake'),
+      ('कुकीज़', 'Cookies'),
+      ('पॉपकॉर्न', 'Popcorn'),
+      ('फ्रेंच फ्राइज', 'French Fries'),
+      ('पनीर टिक्का', 'Paneer Tikka'),
+      ('मटर पनीर', 'Matar Paneer'),
+      ('मसाला डोसा', 'Masala Dosa'),
+      ('कुल्फी', 'Kulfi'),
+      ('फलूदा', 'Falooda'),
+      ('हलवा', 'Halwa'),
+      ('सेवईं', 'Vermicelli'),
+      ('मैगी', 'Maggi'),
+      ('टाको', 'Taco'),
+    ]),
+    CategoryOption.animals => _wordList(category, Icons.pets_rounded, const [
+      ('शेर', 'Lion'),
+      ('हाथी', 'Elephant'),
+      ('बिल्ली', 'Cat'),
+      ('कुत्ता', 'Dog'),
+      ('बंदर', 'Monkey'),
+      ('बाघ', 'Tiger'),
+      ('चीता', 'Cheetah'),
+      ('तेंदुआ', 'Leopard'),
+      ('भालू', 'Bear'),
+      ('भेड़िया', 'Wolf'),
+      ('लोमड़ी', 'Fox'),
+      ('हिरण', 'Deer'),
+      ('घोड़ा', 'Horse'),
+      ('गाय', 'Cow'),
+      ('भैंस', 'Buffalo'),
+      ('बकरी', 'Goat'),
+      ('भेड़', 'Sheep'),
+      ('ऊंट', 'Camel'),
+      ('गधा', 'Donkey'),
+      ('खरगोश', 'Rabbit'),
+      ('चूहा', 'Mouse'),
+      ('गिलहरी', 'Squirrel'),
+      ('सांप', 'Snake'),
+      ('मगरमच्छ', 'Crocodile'),
+      ('कछुआ', 'Turtle'),
+      ('मेंढक', 'Frog'),
+      ('मछली', 'Fish'),
+      ('डॉल्फिन', 'Dolphin'),
+      ('व्हेल', 'Whale'),
+      ('शार्क', 'Shark'),
+      ('ऑक्टोपस', 'Octopus'),
+      ('केकड़ा', 'Crab'),
+      ('समुद्री कछुआ', 'Tortoise'),
+      ('तोता', 'Parrot'),
+      ('कबूतर', 'Pigeon'),
+      ('कौआ', 'Crow'),
+      ('मोर', 'Peacock'),
+      ('बतख', 'Duck'),
+      ('मुर्गी', 'Hen'),
+      ('चील', 'Eagle'),
+      ('उल्लू', 'Owl'),
+      ('पेंगुइन', 'Penguin'),
+      ('जिराफ', 'Giraffe'),
+      ('ज़ेब्रा', 'Zebra'),
+      ('गैंडा', 'Rhino'),
+      ('दरियाई घोड़ा', 'Hippo'),
+      ('कंगारू', 'Kangaroo'),
+      ('पांडा', 'Panda'),
+      ('कोआला', 'Koala'),
+      ('गोरिल्ला', 'Gorilla'),
+      ('चींटी', 'Ant'),
+      ('तितली', 'Butterfly'),
+    ]),
+    CategoryOption.places =>
+      _wordList(category, Icons.location_city_rounded, const [
+        ('स्कूल', 'School'),
+        ('मंदिर', 'Temple'),
+        ('पार्क', 'Park'),
+        ('होटल', 'Hotel'),
+        ('रेलवे स्टेशन', 'Railway Station'),
+        ('बस स्टैंड', 'Bus Stand'),
+        ('एयरपोर्ट', 'Airport'),
+        ('अस्पताल', 'Hospital'),
+        ('बैंक', 'Bank'),
+        ('बाजार', 'Market'),
+        ('मॉल', 'Mall'),
+        ('सिनेमा हॉल', 'Cinema Hall'),
+        ('रेस्टोरेंट', 'Restaurant'),
+        ('कैफे', 'Cafe'),
+        ('लाइब्रेरी', 'Library'),
+        ('कॉलेज', 'College'),
+        ('ऑफिस', 'Office'),
+        ('घर', 'Home'),
+        ('छत', 'Terrace'),
+        ('रसोई', 'Kitchen'),
+        ('बेडरूम', 'Bedroom'),
+        ('बाथरूम', 'Bathroom'),
+        ('गार्डन', 'Garden'),
+        ('जिम', 'Gym'),
+        ('स्टेडियम', 'Stadium'),
+        ('स्विमिंग पूल', 'Swimming Pool'),
+        ('समुद्र तट', 'Beach'),
+        ('पहाड़', 'Mountain'),
+        ('जंगल', 'Forest'),
+        ('रेगिस्तान', 'Desert'),
+        ('झील', 'Lake'),
+        ('नदी', 'River'),
+        ('पुल', 'Bridge'),
+        ('किला', 'Fort'),
+        ('महल', 'Palace'),
+        ('म्यूजियम', 'Museum'),
+        ('चिड़ियाघर', 'Zoo'),
+        ('पुलिस स्टेशन', 'Police Station'),
+        ('पोस्ट ऑफिस', 'Post Office'),
+        ('फार्म हाउस', 'Farm House'),
+        ('गांव', 'Village'),
+        ('शहर', 'City'),
+        ('फैक्ट्री', 'Factory'),
+        ('वर्कशॉप', 'Workshop'),
+        ('क्लासरूम', 'Classroom'),
+        ('लैब', 'Lab'),
+        ('क्लिनिक', 'Clinic'),
+        ('दुकान', 'Shop'),
+        ('मेट्रो स्टेशन', 'Metro Station'),
+        ('पेट्रोल पंप', 'Petrol Pump'),
+        ('मंदिर गली', 'Temple Street'),
+        ('खेल मैदान', 'Playground'),
+      ]),
+    CategoryOption.movies => _wordList(category, Icons.movie_rounded, const [
+      ('हीरो', 'Hero'),
+      ('विलेन', 'Villain'),
+      ('सिनेमा', 'Cinema'),
+      ('टिकट', 'Ticket'),
+      ('गाना', 'Song'),
+      ('डायरेक्टर', 'Director'),
+      ('एक्टर', 'Actor'),
+      ('एक्ट्रेस', 'Actress'),
+      ('कैमरा', 'Camera'),
+      ('स्क्रिप्ट', 'Script'),
+      ('डायलॉग', 'Dialogue'),
+      ('क्लाइमैक्स', 'Climax'),
+      ('ट्रेलर', 'Trailer'),
+      ('पोस्टर', 'Poster'),
+      ('पॉपकॉर्न', 'Popcorn'),
+      ('इंटरवल', 'Interval'),
+      ('सीट', 'Seat'),
+      ('स्क्रीन', 'Screen'),
+      ('लाइट', 'Light'),
+      ('माइक', 'Mic'),
+      ('स्टूडियो', 'Studio'),
+      ('सेट', 'Set'),
+      ('कॉस्ट्यूम', 'Costume'),
+      ('मेकअप', 'Makeup'),
+      ('डांस', 'Dance'),
+      ('एक्शन', 'Action'),
+      ('कॉमेडी', 'Comedy'),
+      ('रोमांस', 'Romance'),
+      ('हॉरर', 'Horror'),
+      ('थ्रिलर', 'Thriller'),
+      ('ड्रामा', 'Drama'),
+      ('सस्पेंस', 'Suspense'),
+      ('म्यूजिक', 'Music'),
+      ('फाइट सीन', 'Fight Scene'),
+      ('कार चेज', 'Car Chase'),
+      ('हीरोइन', 'Heroine'),
+      ('साइडकिक', 'Sidekick'),
+      ('कॉमेडियन', 'Comedian'),
+      ('प्रोड्यूसर', 'Producer'),
+      ('एडिटर', 'Editor'),
+      ('ऑडिशन', 'Audition'),
+      ('रीमेक', 'Remake'),
+      ('सीक्वल', 'Sequel'),
+      ('ब्लॉकबस्टर', 'Blockbuster'),
+      ('फ्लॉप', 'Flop'),
+      ('अवार्ड', 'Award'),
+      ('रेड कार्पेट', 'Red Carpet'),
+      ('फिल्म फेस्टिवल', 'Film Festival'),
+      ('डबिंग', 'Dubbing'),
+      ('सबटाइटल', 'Subtitle'),
+      ('बैकग्राउंड म्यूजिक', 'Background Music'),
+      ('क्लैप बोर्ड', 'Clapboard'),
+    ]),
+    CategoryOption.objects => _wordList(category, Icons.widgets_rounded, const [
+      ('मोबाइल', 'Mobile'),
+      ('कुर्सी', 'Chair'),
+      ('किताब', 'Book'),
+      ('घड़ी', 'Watch'),
+      ('बैग', 'Bag'),
+      ('पेन', 'Pen'),
+      ('पेंसिल', 'Pencil'),
+      ('रबर', 'Eraser'),
+      ('कॉपी', 'Notebook'),
+      ('लैपटॉप', 'Laptop'),
+      ('कंप्यूटर', 'Computer'),
+      ('कीबोर्ड', 'Keyboard'),
+      ('माउस', 'Mouse'),
+      ('चार्जर', 'Charger'),
+      ('हेडफोन', 'Headphones'),
+      ('स्पीकर', 'Speaker'),
+      ('टीवी', 'TV'),
+      ('रिमोट', 'Remote'),
+      ('पंखा', 'Fan'),
+      ('बल्ब', 'Bulb'),
+      ('दरवाज़ा', 'Door'),
+      ('खिड़की', 'Window'),
+      ('टेबल', 'Table'),
+      ('बोतल', 'Bottle'),
+      ('गिलास', 'Glass'),
+      ('प्लेट', 'Plate'),
+      ('चम्मच', 'Spoon'),
+      ('कांटा', 'Fork'),
+      ('चाकू', 'Knife'),
+      ('जूते', 'Shoes'),
+      ('चप्पल', 'Slippers'),
+      ('टोपी', 'Cap'),
+      ('चश्मा', 'Glasses'),
+      ('छाता', 'Umbrella'),
+      ('ताला', 'Lock'),
+      ('चाबी', 'Key'),
+      ('कंघी', 'Comb'),
+      ('आईना', 'Mirror'),
+      ('तकिया', 'Pillow'),
+      ('कंबल', 'Blanket'),
+      ('साबुन', 'Soap'),
+      ('ब्रश', 'Brush'),
+      ('टूथपेस्ट', 'Toothpaste'),
+      ('कैंची', 'Scissors'),
+      ('रस्सी', 'Rope'),
+      ('बाल्टी', 'Bucket'),
+      ('झाड़ू', 'Broom'),
+      ('कैमरा', 'Camera'),
+      ('वॉलेट', 'Wallet'),
+      ('सूटकेस', 'Suitcase'),
+      ('कैलेंडर', 'Calendar'),
+      ('टॉर्च', 'Torch'),
+    ]),
+    CategoryOption.custom =>
+      _wordList(category, Icons.extension_rounded, const [
+        ('दोस्त', 'Friend'),
+        ('खेल', 'Game'),
+        ('रहस्य', 'Mystery'),
+        ('सवाल', 'Question'),
+        ('जवाब', 'Answer'),
+        ('पार्टी', 'Party'),
+        ('हंसी', 'Laughter'),
+        ('झूठ', 'Lie'),
+        ('सच', 'Truth'),
+        ('प्लान', 'Plan'),
+        ('टीम', 'Team'),
+        ('चैलेंज', 'Challenge'),
+        ('इनाम', 'Prize'),
+        ('हार', 'Defeat'),
+        ('जीत', 'Win'),
+        ('मिशन', 'Mission'),
+        ('कोड', 'Code'),
+        ('पासवर्ड', 'Password'),
+        ('क्लू', 'Clue'),
+        ('जासूस', 'Detective'),
+        ('सीक्रेट', 'Secret'),
+        ('सरप्राइज', 'Surprise'),
+        ('मस्ती', 'Fun'),
+        ('डर', 'Fear'),
+        ('हिम्मत', 'Courage'),
+        ('याद', 'Memory'),
+        ('सपना', 'Dream'),
+        ('कहानी', 'Story'),
+        ('मैसेज', 'Message'),
+        ('कॉल', 'Call'),
+        ('फोटो', 'Photo'),
+        ('वीडियो', 'Video'),
+        ('म्यूजिक', 'Music'),
+        ('डांस', 'Dance'),
+        ('हॉबी', 'Hobby'),
+        ('टैलेंट', 'Talent'),
+        ('नियम', 'Rule'),
+        ('टाइम', 'Time'),
+        ('नक्शा', 'Map'),
+        ('रास्ता', 'Path'),
+        ('मौसम', 'Weather'),
+        ('बारिश', 'Rain'),
+        ('धूप', 'Sunshine'),
+        ('रात', 'Night'),
+        ('सुबह', 'Morning'),
+        ('शाम', 'Evening'),
+        ('त्योहार', 'Festival'),
+        ('यात्रा', 'Trip'),
+        ('गिफ्ट', 'Gift'),
+        ('मुकाबला', 'Contest'),
+        ('मजाक', 'Joke'),
+        ('पहेली', 'Puzzle'),
+      ]),
   };
 }
 
-String _categoryAsset(CategoryOption category) {
+String _categoryKey(CategoryOption category) {
   return switch (category) {
-    CategoryOption.food => PremiumAssets.categoryFood,
-    CategoryOption.animals => PremiumAssets.categoryAnimals,
-    CategoryOption.places => PremiumAssets.categoryPlaces,
-    CategoryOption.movies => PremiumAssets.categoryMovies,
-    CategoryOption.objects => PremiumAssets.categoryObjects,
-    CategoryOption.custom => PremiumAssets.categoryCustom,
+    CategoryOption.food => 'food',
+    CategoryOption.animals => 'animals',
+    CategoryOption.places => 'places',
+    CategoryOption.movies => 'movies',
+    CategoryOption.objects => 'objects',
+    CategoryOption.custom => 'custom',
   };
+}
+
+String _wordAssetKey(String english) {
+  final lower = english.toLowerCase();
+  final normalized = lower.replaceAll(RegExp(r'[^a-z0-9]+'), '_');
+  return normalized.replaceAll(RegExp(r'^_+|_+$'), '');
 }

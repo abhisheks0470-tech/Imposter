@@ -55,6 +55,10 @@ void main() {
     await tester.pump();
     expect(find.text('जानवर'), findsOneWidget);
 
+    await tester.ensureVisible(
+      find.byKey(const ValueKey('choice_AppLanguage.english')),
+    );
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('choice_AppLanguage.english')));
     await tester.pumpAndSettle();
     expect(find.text('Game Setup'), findsWidgets);

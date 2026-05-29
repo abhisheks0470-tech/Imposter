@@ -26,10 +26,15 @@ class PlayerRevealData {
 }
 
 class SecretWordData {
-  const SecretWordData({required this.hindi, required this.english});
+  const SecretWordData({
+    required this.hindi,
+    required this.english,
+    this.imageAsset,
+  });
 
   final String hindi;
   final String english;
+  final String? imageAsset;
 
   String label(AppLanguage language) {
     return language == AppLanguage.hindi ? hindi : english;
