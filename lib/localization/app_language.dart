@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 enum AppLanguage { hindi, english }
 
 class AppLanguageController extends ChangeNotifier {
-  AppLanguageController({AppLanguage initialLanguage = AppLanguage.hindi})
+  AppLanguageController({AppLanguage initialLanguage = AppLanguage.english})
     : _language = initialLanguage;
 
   AppLanguage _language;
