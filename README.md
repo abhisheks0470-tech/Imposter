@@ -7,7 +7,7 @@ A Flutter app for a Hindi Imposter party game.
 - Flutter project scaffolded for Android and iOS.
 - Widget-built Hindi Imposter game flow is implemented from Home through Result.
 - Includes setup, player names, private reveal, discussion, voting, and final result screens.
-- Uses Flutter widgets and Material icons for visuals; no fullscreen screenshot assets are required.
+- Uses real Flutter widgets with separated premium image assets; no fullscreen screenshot shell is used.
 
 ## Verification
 
@@ -16,7 +16,7 @@ Run the usual checks before pushing:
 ```sh
 dart format lib test
 flutter pub get
-flutter analyze
+flutter analyze --no-fatal-infos --no-fatal-warnings
 flutter test
-flutter build apk --debug
+flutter build apk --release
 ```

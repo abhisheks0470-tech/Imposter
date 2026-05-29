@@ -1,90 +1,188 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
-import '../theme/app_colors.dart';
+import '../localization/app_language.dart';
+import '../theme/neon_theme.dart';
+import '../theme/premium_assets.dart';
+import '../widgets/neon_widgets.dart';
 import 'game_setup_screen.dart';
 import 'how_to_play_screen.dart';
-import '../widgets/app_background.dart';
-import '../widgets/crewmate_illustration.dart';
-import '../widgets/neon_button.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
+    const language = AppLanguage.hindi;
+    return NeonScaffold(
+      child: Column(
         children: [
-          const Positioned.fill(child: AppBackground()),
-          SafeArea(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final width = constraints.maxWidth;
-                final heroHeight = (constraints.maxHeight * 0.66).clamp(
-                  500.0,
-                  650.0,
-                );
-
-                return SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: constraints.maxHeight,
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: width < 380 ? 18 : 24,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(height: width < 380 ? 18 : 28),
-                          SizedBox(
-                            width: math.min(width, 470),
-                            height: heroHeight,
-                            child: const CrewmateIllustration(),
-                          ),
-                          const SizedBox(height: 18),
-                          NeonButton(
-                            label: 'Start Game',
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute<void>(
-                                  builder: (_) => const GameSetupScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                          SizedBox(height: width < 380 ? 18 : 26),
-                        ],
-                      ),
-                    ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: _HowToPlayButton(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const HowToPlayScreen(),
                   ),
                 );
               },
             ),
           ),
-          SafeArea(
-            child: Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 12, 18, 0),
-                child: _HowToPlayButton(
+          SizedBox(height: sh(context, 18)),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _HeroLogo(language: language),
+                _FeatureGrid(language: language),
+                NeonButton(
+                  label: 'Start Game',
+                  language: AppLanguage.english,
+                  icon: Icons.play_arrow_rounded,
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute<void>(
-                        builder: (_) => const HowToPlayScreen(),
+                        builder: (_) => const GameSetupScreen(),
                       ),
                     );
                   },
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HeroLogo extends StatelessWidget {
+  const _HeroLogo({required this.language});
+
+  final AppLanguage language;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: sh(context, 720).clamp(240, 370),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned(
+            top: sh(context, 34),
+            child: Container(
+              width: sw(context, 420).clamp(150, 220),
+              height: sw(context, 420).clamp(150, 220),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    NeonTheme.neonPurple.withValues(alpha: 0.34),
+                    Colors.transparent,
+                  ],
+                ),
+                boxShadow: const [
+                  BoxShadow(color: NeonTheme.neonPurple, blurRadius: 42),
+                ],
+              ),
+            ),
+          ),
+          Positioned(
+            top: 0,
+            child: Image.asset(
+              PremiumAssets.logo,
+              width: sw(context, 770).clamp(285, 430),
+              fit: BoxFit.contain,
+            ),
+          ),
+          Positioned(
+            bottom: sh(context, 48),
+            left: sw(context, 22),
+            child: Image.asset(
+              PremiumAssets.mascotShhh,
+              height: sh(context, 310).clamp(105, 180),
+              fit: BoxFit.contain,
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            child: NeonCard(
+              padding: EdgeInsets.symmetric(
+                horizontal: sw(context, 44),
+                vertical: sh(context, 14),
+              ),
+              borderColor: NeonTheme.neonPurple,
+              child: Text(
+                'शब्द बताओ, इम्पोस्टर पहचानो!',
+                style: NeonTheme.body(
+                  context,
+                  language,
+                  size: 35,
+                  color: NeonTheme.gold,
+                  weight: FontWeight.w900,
                 ),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _FeatureGrid extends StatelessWidget {
+  const _FeatureGrid({required this.language});
+
+  final AppLanguage language;
+
+  @override
+  Widget build(BuildContext context) {
+    final items = [
+      (Icons.groups_rounded, '3-12 खिलाड़ी'),
+      (Icons.masks_rounded, 'गुप्त रोल'),
+      (Icons.how_to_vote_rounded, 'वोटिंग'),
+      (Icons.translate_rounded, 'Hindi / English'),
+    ];
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: sw(context, 18),
+        mainAxisSpacing: sh(context, 14),
+        childAspectRatio: 3.8,
+      ),
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        final item = items[index];
+        return NeonCard(
+          padding: EdgeInsets.symmetric(
+            horizontal: sw(context, 18),
+            vertical: sh(context, 12),
+          ),
+          borderColor: index.isEven ? NeonTheme.neonPurple : NeonTheme.neonBlue,
+          child: Row(
+            children: [
+              Icon(item.$1, color: NeonTheme.gold, size: sp(context, 38)),
+              SizedBox(width: sw(context, 12)),
+              Expanded(
+                child: Text(
+                  item.$2,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: NeonTheme.body(
+                    context,
+                    language,
+                    size: 25,
+                    color: NeonTheme.textWhite,
+                    weight: FontWeight.w900,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -96,38 +194,29 @@ class _HowToPlayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(22),
-        onTap: onTap,
-        child: Ink(
-          height: 44,
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(22),
-            color: const Color(0xB00C0627),
-            border: Border.all(color: AppColors.purpleBorder, width: 1.5),
-            boxShadow: const [
-              BoxShadow(color: AppColors.purpleShadow, blurRadius: 14),
-            ],
+    return NeonCard(
+      onTap: onTap,
+      padding: EdgeInsets.symmetric(
+        horizontal: sw(context, 28),
+        vertical: sh(context, 12),
+      ),
+      borderColor: NeonTheme.neonPink,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.menu_book_rounded, color: NeonTheme.gold, size: 22),
+          SizedBox(width: sw(context, 10)),
+          Text(
+            'How to Play',
+            style: NeonTheme.body(
+              context,
+              AppLanguage.english,
+              size: 24,
+              color: NeonTheme.textWhite,
+              weight: FontWeight.w900,
+            ),
           ),
-          child: const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.help_outline_rounded, color: Colors.white, size: 20),
-              SizedBox(width: 6),
-              Text(
-                'How to Play',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }

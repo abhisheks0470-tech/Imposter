@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'localization/app_language.dart';
-import 'screens/home_screen.dart';
+import 'screens/splash_screen.dart';
 import 'theme/app_colors.dart';
 
 void main() {
@@ -40,9 +41,9 @@ class _HindiImposterAppState extends State<HindiImposterApp> {
         theme: ThemeData(
           useMaterial3: true,
           scaffoldBackgroundColor: AppColors.backgroundDeep,
-          fontFamily: 'Roboto',
+          textTheme: GoogleFonts.notoSansDevanagariTextTheme(),
         ),
-        home: const HomeScreen(),
+        home: const SplashScreen(),
       ),
     );
   }
