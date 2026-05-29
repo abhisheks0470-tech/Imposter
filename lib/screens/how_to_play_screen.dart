@@ -11,18 +11,18 @@ class HowToPlayScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const language = AppLanguage.hindi;
+    final language = AppLanguageScope.of(context).language;
     return NeonScaffold(
       child: Column(
         children: [
           NeonHeader(
             language: language,
             onBack: () => Navigator.of(context).pop(),
-            title: 'हिंदी IMPOSTER',
+            title: nt(language, hi: 'हिंदी IMPOSTER', en: 'Hindi Imposter'),
           ),
           SizedBox(height: sh(context, 18)),
           Text(
-            'कैसे खेलें?',
+            nt(language, hi: 'कैसे खेलें?', en: 'How to Play?'),
             style: NeonTheme.heading(context, language, size: 94),
             textAlign: TextAlign.center,
           ),
@@ -34,7 +34,11 @@ class HowToPlayScreen extends StatelessWidget {
             ),
           ),
           Text(
-            'शब्द बताओ, इम्पोस्टर पहचानो!',
+            nt(
+              language,
+              hi: 'शब्द बताओ, इम्पोस्टर पहचानो!',
+              en: 'Give hints, find the imposter!',
+            ),
             style: NeonTheme.body(
               context,
               language,
@@ -52,32 +56,60 @@ class HowToPlayScreen extends StatelessWidget {
               crossAxisSpacing: sw(context, 16),
               mainAxisSpacing: sh(context, 14),
               childAspectRatio: 0.82,
-              children: const [
+              children: [
                 _RuleCard(
+                  language: language,
                   number: '1',
-                  title: 'सबको शब्द मिलेगा',
-                  body: 'सभी खिलाड़ियों को एक जैसा शब्द मिलता है।',
+                  title: nt(
+                    language,
+                    hi: 'सबको शब्द मिलेगा',
+                    en: 'Everyone gets a word',
+                  ),
+                  body: nt(
+                    language,
+                    hi: 'सभी खिलाड़ियों को एक जैसा शब्द मिलता है।',
+                    en: 'All normal players get the same word.',
+                  ),
                   icon: Icons.style_rounded,
                   color: NeonTheme.gold,
                 ),
                 _RuleCard(
+                  language: language,
                   number: '2',
-                  title: 'एक इम्पोस्टर होगा',
-                  body: 'इम्पोस्टर को कोई शब्द नहीं मिलेगा।',
+                  title: nt(
+                    language,
+                    hi: 'एक इम्पोस्टर होगा',
+                    en: 'One player is imposter',
+                  ),
+                  body: nt(
+                    language,
+                    hi: 'इम्पोस्टर को कोई शब्द नहीं मिलेगा।',
+                    en: 'The imposter will not get any word.',
+                  ),
                   icon: Icons.masks_rounded,
                   color: NeonTheme.neonPink,
                 ),
                 _RuleCard(
+                  language: language,
                   number: '3',
-                  title: 'संकेत दो',
-                  body: 'शब्द का संकेत दो, नाम मत बोलो।',
+                  title: nt(language, hi: 'संकेत दो', en: 'Give hints'),
+                  body: nt(
+                    language,
+                    hi: 'शब्द का संकेत दो, नाम मत बोलो।',
+                    en: 'Give hints, but do not say the word.',
+                  ),
                   icon: Icons.chat_bubble_rounded,
                   color: NeonTheme.neonBlue,
                 ),
                 _RuleCard(
+                  language: language,
                   number: '4',
-                  title: 'वोट करो',
-                  body: 'जिस पर शक हो उसे वोट करो।',
+                  title: nt(language, hi: 'वोट करो', en: 'Vote'),
+                  body: nt(
+                    language,
+                    hi: 'जिस पर शक हो उसे वोट करो।',
+                    en: 'Vote for the player you suspect.',
+                  ),
                   icon: Icons.how_to_vote_rounded,
                   color: NeonTheme.green,
                 ),
@@ -85,7 +117,7 @@ class HowToPlayScreen extends StatelessWidget {
             ),
           ),
           NeonButton(
-            label: 'आगे बढ़ें',
+            label: nt(language, hi: 'आगे बढ़ें', en: 'Continue'),
             language: language,
             icon: Icons.double_arrow_rounded,
             onTap: () {
@@ -104,6 +136,7 @@ class HowToPlayScreen extends StatelessWidget {
 
 class _RuleCard extends StatelessWidget {
   const _RuleCard({
+    required this.language,
     required this.number,
     required this.title,
     required this.body,
@@ -111,6 +144,7 @@ class _RuleCard extends StatelessWidget {
     required this.color,
   });
 
+  final AppLanguage language;
   final String number;
   final String title;
   final String body;
@@ -152,16 +186,13 @@ class _RuleCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: sh(context, 10)),
-          Text(
-            title,
-            style: NeonTheme.title(context, AppLanguage.hindi, size: 38),
-          ),
+          Text(title, style: NeonTheme.title(context, language, size: 38)),
           SizedBox(height: sh(context, 8)),
           Text(
             body,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
-            style: NeonTheme.body(context, AppLanguage.hindi, size: 29),
+            style: NeonTheme.body(context, language, size: 29),
           ),
         ],
       ),

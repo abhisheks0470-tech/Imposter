@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const language = AppLanguage.hindi;
+    final language = AppLanguageScope.of(context).language;
     return NeonScaffold(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
           SizedBox(height: sh(context, 42)),
           Text(
-            'लोड हो रहा है...',
+            nt(language, hi: 'लोड हो रहा है...', en: 'Loading...'),
             style: NeonTheme.title(context, language, size: 42),
           ),
           SizedBox(height: sh(context, 20)),

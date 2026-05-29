@@ -24,7 +24,7 @@ void main() {
     await tester.tap(find.text('How to Play'));
     await tester.pumpAndSettle();
     expect(find.byType(HowToPlayScreen), findsOneWidget);
-    expect(find.text('कैसे खेलें?'), findsOneWidget);
+    expect(find.text('How to Play?'), findsOneWidget);
 
     await tester.tap(find.byKey(const ValueKey('header_back_button')).first);
     await tester.pumpAndSettle();
@@ -53,7 +53,7 @@ void main() {
       find.byKey(const ValueKey('choice_CategoryOption.animals')),
     );
     await tester.pump();
-    expect(find.text('जानवर'), findsOneWidget);
+    expect(find.text('Animals'), findsOneWidget);
 
     await tester.ensureVisible(
       find.byKey(const ValueKey('choice_AppLanguage.english')),

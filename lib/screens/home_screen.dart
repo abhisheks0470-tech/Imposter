@@ -12,7 +12,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const language = AppLanguage.hindi;
+    final language = AppLanguageScope.of(context).language;
     return NeonScaffold(
       child: Column(
         children: [
@@ -36,8 +36,8 @@ class HomeScreen extends StatelessWidget {
                 _HeroLogo(language: language),
                 _FeatureGrid(language: language),
                 NeonButton(
-                  label: 'Start Game',
-                  language: AppLanguage.english,
+                  label: nt(language, hi: 'खेल शुरू करें', en: 'Start Game'),
+                  language: language,
                   icon: Icons.play_arrow_rounded,
                   onTap: () {
                     Navigator.of(context).push(
@@ -113,7 +113,11 @@ class _HeroLogo extends StatelessWidget {
               ),
               borderColor: NeonTheme.neonPurple,
               child: Text(
-                'शब्द बताओ, इम्पोस्टर पहचानो!',
+                nt(
+                  language,
+                  hi: 'शब्द बताओ, इम्पोस्टर पहचानो!',
+                  en: 'Give hints, find the imposter!',
+                ),
                 style: NeonTheme.body(
                   context,
                   language,
@@ -138,9 +142,12 @@ class _FeatureGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      (Icons.groups_rounded, '3-12 खिलाड़ी'),
-      (Icons.masks_rounded, 'गुप्त रोल'),
-      (Icons.how_to_vote_rounded, 'वोटिंग'),
+      (
+        Icons.groups_rounded,
+        nt(language, hi: '3-12 खिलाड़ी', en: '3-12 Players'),
+      ),
+      (Icons.masks_rounded, nt(language, hi: 'गुप्त रोल', en: 'Secret Role')),
+      (Icons.how_to_vote_rounded, nt(language, hi: 'वोटिंग', en: 'Voting')),
       (Icons.translate_rounded, 'Hindi / English'),
     ];
     return GridView.builder(
@@ -194,6 +201,7 @@ class _HowToPlayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final language = AppLanguageScope.of(context).language;
     return NeonCard(
       onTap: onTap,
       padding: EdgeInsets.symmetric(
@@ -211,10 +219,10 @@ class _HowToPlayButton extends StatelessWidget {
           ),
           SizedBox(width: sw(context, 10)),
           Text(
-            'How to Play',
+            nt(language, hi: 'कैसे खेलें?', en: 'How to Play'),
             style: NeonTheme.body(
               context,
-              AppLanguage.english,
+              language,
               size: 31,
               color: NeonTheme.textWhite,
               weight: FontWeight.w900,

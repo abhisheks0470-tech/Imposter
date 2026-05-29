@@ -684,7 +684,7 @@ List<_SecretWord> _wordList(
         english: entry.$2,
         icon: icon,
         imageAsset:
-            'assets/imposter/words/${_categoryKey(category)}/${_wordAssetKey(entry.$2)}.png',
+            'assets/imposter/words/${_categoryKey(category)}/${_wordAssetKey(entry.$2)}.webp',
       ),
   ];
 }

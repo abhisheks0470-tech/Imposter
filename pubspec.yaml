@@ -55,17 +55,13 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/imposter/
+    - assets/imposter/background.webp
+    - assets/imposter/main.webp
+    - assets/imposter/single1.webp
+    - assets/imposter/single2.webp
+    - assets/imposter/single3.webp
     - assets/imposter/icons/
-    - assets/imposter/buttons/
     - assets/imposter/category/
-    - assets/imposter/frame/
-    - assets/imposter/words/food/
-    - assets/imposter/words/animals/
-    - assets/imposter/words/places/
-    - assets/imposter/words/movies/
-    - assets/imposter/words/objects/
-    - assets/imposter/words/custom/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
