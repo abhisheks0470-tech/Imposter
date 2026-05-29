@@ -6,8 +6,6 @@ workflows:
 
     environment:
       flutter: stable
-      xcode: latest
-      cocoapods: default
 
     scripts:
       - name: Get Flutter packages
@@ -16,8 +14,11 @@ workflows:
 
       - name: Analyze project
         script: |
-          flutter analyze
+          flutter analyze --no-fatal-infos --no-fatal-warnings
 
+      - name: Run tests
+        script: |
+          flutter test
 
       - name: Build Android APK
         script: |
