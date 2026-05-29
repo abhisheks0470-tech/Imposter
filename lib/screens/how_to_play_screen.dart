@@ -23,7 +23,7 @@ class HowToPlayScreen extends StatelessWidget {
           SizedBox(height: sh(context, 18)),
           Text(
             'कैसे खेलें?',
-            style: NeonTheme.heading(context, language, size: 90),
+            style: NeonTheme.heading(context, language, size: 94),
             textAlign: TextAlign.center,
           ),
           SizedBox(
@@ -38,7 +38,7 @@ class HowToPlayScreen extends StatelessWidget {
             style: NeonTheme.body(
               context,
               language,
-              size: 34,
+              size: 38,
               color: NeonTheme.gold,
               weight: FontWeight.w900,
             ),
@@ -51,7 +51,7 @@ class HowToPlayScreen extends StatelessWidget {
               crossAxisCount: 2,
               crossAxisSpacing: sw(context, 16),
               mainAxisSpacing: sh(context, 14),
-              childAspectRatio: 1.08,
+              childAspectRatio: 0.82,
               children: const [
                 _RuleCard(
                   number: '1',
@@ -122,7 +122,7 @@ class _RuleCard extends StatelessWidget {
     return NeonCard(
       borderColor: color,
       glowColor: color,
-      padding: EdgeInsets.all(sp(context, 24)),
+      padding: EdgeInsets.all(sp(context, 18)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -151,17 +151,17 @@ class _RuleCard extends StatelessWidget {
               Icon(icon, color: color, size: sp(context, 52)),
             ],
           ),
-          SizedBox(height: sh(context, 18)),
+          SizedBox(height: sh(context, 10)),
           Text(
             title,
-            style: NeonTheme.title(context, AppLanguage.hindi, size: 34),
+            style: NeonTheme.title(context, AppLanguage.hindi, size: 38),
           ),
           SizedBox(height: sh(context, 8)),
           Text(
             body,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
-            style: NeonTheme.body(context, AppLanguage.hindi, size: 25),
+            style: NeonTheme.body(context, AppLanguage.hindi, size: 29),
           ),
         ],
       ),

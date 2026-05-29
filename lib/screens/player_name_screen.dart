@@ -55,7 +55,7 @@ class _PlayerNameScreenState extends State<PlayerNameScreen> {
             children: [
               Image.asset(
                 PremiumAssets.mascotClipboard,
-                height: sh(context, 170).clamp(64, 96),
+                height: sh(context, 190).clamp(76, 112),
                 fit: BoxFit.contain,
               ),
               SizedBox(width: sw(context, 18)),
@@ -66,7 +66,7 @@ class _PlayerNameScreenState extends State<PlayerNameScreen> {
                     hi: 'खिलाड़ियों के नाम जोड़ें',
                     en: 'Add player names',
                   ),
-                  style: NeonTheme.heading(context, _language, size: 60),
+                  style: NeonTheme.heading(context, _language, size: 72),
                 ),
               ),
             ],
@@ -81,7 +81,7 @@ class _PlayerNameScreenState extends State<PlayerNameScreen> {
                   language: _language,
                   icon: Icons.auto_fix_high_rounded,
                   variant: NeonButtonVariant.purple,
-                  height: sh(context, 86).clamp(44, 54),
+                  height: sh(context, 104).clamp(58, 64),
                   onTap: _fillDefaultNames,
                 ),
               ),
@@ -189,8 +189,8 @@ class _NameField extends StatelessWidget {
   Widget build(BuildContext context) {
     return NeonCard(
       padding: EdgeInsets.symmetric(
-        horizontal: sw(context, 20),
-        vertical: sh(context, 10),
+        horizontal: sw(context, 22),
+        vertical: sh(context, 14),
       ),
       child: Row(
         children: [
@@ -203,7 +203,7 @@ class _NameField extends StatelessWidget {
               style: NeonTheme.body(
                 context,
                 language,
-                size: 34,
+                size: 40,
                 color: NeonTheme.textWhite,
                 weight: FontWeight.w900,
               ),
@@ -214,7 +214,7 @@ class _NameField extends StatelessWidget {
                 hintStyle: NeonTheme.body(
                   context,
                   language,
-                  size: 34,
+                  size: 40,
                   color: NeonTheme.textMuted,
                 ),
               ),
@@ -222,8 +222,8 @@ class _NameField extends StatelessWidget {
           ),
           Image.asset(
             PremiumAssets.iconPencil,
-            width: sp(context, 42),
-            height: sp(context, 42),
+            width: sp(context, 50),
+            height: sp(context, 50),
           ),
         ],
       ),

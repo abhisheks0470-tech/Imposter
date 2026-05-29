@@ -33,7 +33,7 @@ class ResultScreen extends StatelessWidget {
             title: nt(_language, hi: 'रिजल्ट', en: 'Result'),
             onBack: () => Navigator.of(context).pop(),
           ),
-          SizedBox(height: sh(context, 18)),
+          SizedBox(height: sh(context, 10)),
           Text(
             _isCorrect
                 ? nt(
@@ -46,11 +46,11 @@ class ResultScreen extends StatelessWidget {
             style: NeonTheme.heading(
               context,
               _language,
-              size: 74,
+              size: 78,
               color: accent,
             ),
           ),
-          SizedBox(height: sh(context, 18)),
+          SizedBox(height: sh(context, 10)),
           ResultPanel(
             language: _language,
             title: _isCorrect
@@ -69,7 +69,7 @@ class ResultScreen extends StatelessWidget {
             icon: _isCorrect ? Icons.verified_rounded : Icons.cancel_rounded,
             accent: accent,
           ),
-          SizedBox(height: sh(context, 12)),
+          SizedBox(height: sh(context, 8)),
           ResultPanel(
             language: _language,
             title: nt(_language, hi: 'असली इम्पोस्टर', en: 'Real Imposter'),
@@ -81,8 +81,10 @@ class ResultScreen extends StatelessWidget {
             icon: Icons.masks_rounded,
             accent: NeonTheme.neonPink,
           ),
-          SizedBox(height: sh(context, 12)),
-          Expanded(
+          SizedBox(height: sh(context, 8)),
+          SizedBox(
+            width: double.infinity,
+            height: sh(context, 520).clamp(220, 300),
             child: RevealCard(
               language: _language,
               label: nt(_language, hi: 'गुप्त शब्द', en: 'Secret Word'),
@@ -92,7 +94,7 @@ class ResultScreen extends StatelessWidget {
               visualAsset: _categoryAsset(_setup.category),
             ),
           ),
-          SizedBox(height: sh(context, 12)),
+          SizedBox(height: sh(context, 8)),
           Row(
             children: [
               Expanded(
@@ -100,7 +102,6 @@ class ResultScreen extends StatelessWidget {
                   key: const ValueKey('play_again_button'),
                   label: nt(_language, hi: 'फिर खेलें', en: 'Play Again'),
                   language: _language,
-                  icon: Icons.replay_rounded,
                   onTap: () {
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute<void>(
@@ -117,7 +118,6 @@ class ResultScreen extends StatelessWidget {
                   key: const ValueKey('change_setup_button'),
                   label: nt(_language, hi: 'नया गेम', en: 'New Game'),
                   language: _language,
-                  icon: Icons.tune_rounded,
                   variant: NeonButtonVariant.purple,
                   onTap: () {
                     Navigator.of(context).pushAndRemoveUntil(
@@ -131,14 +131,13 @@ class ResultScreen extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: sh(context, 10)),
+          SizedBox(height: sh(context, 8)),
           NeonButton(
             key: const ValueKey('home_button'),
             label: nt(_language, hi: 'होम पर जाएँ', en: 'Go Home'),
             language: _language,
-            icon: Icons.home_rounded,
             variant: NeonButtonVariant.purple,
-            height: sh(context, 92).clamp(46, 56),
+            height: sh(context, 104).clamp(58, 64),
             onTap: () {
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute<void>(builder: (_) => const HomeScreen()),

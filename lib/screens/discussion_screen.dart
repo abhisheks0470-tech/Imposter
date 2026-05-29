@@ -28,7 +28,7 @@ class DiscussionScreen extends StatelessWidget {
           Text(
             nt(_language, hi: 'चर्चा का समय', en: 'Discussion Time'),
             textAlign: TextAlign.center,
-            style: NeonTheme.heading(context, _language, size: 76),
+            style: NeonTheme.heading(context, _language, size: 84),
           ),
           Text(
             nt(
@@ -40,7 +40,7 @@ class DiscussionScreen extends StatelessWidget {
             style: NeonTheme.body(
               context,
               _language,
-              size: 31,
+              size: 35,
               color: NeonTheme.gold,
               weight: FontWeight.w900,
             ),
@@ -136,7 +136,7 @@ class _Rule extends StatelessWidget {
               style: NeonTheme.body(
                 context,
                 language,
-                size: 27,
+                size: 31,
                 color: NeonTheme.textWhite,
                 weight: FontWeight.w800,
               ),
@@ -205,7 +205,7 @@ class _Metric extends StatelessWidget {
             style: NeonTheme.title(
               context,
               language,
-              size: 34,
+              size: 42,
               color: NeonTheme.gold,
             ),
           ),

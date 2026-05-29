@@ -96,11 +96,11 @@ class _HeroLogo extends StatelessWidget {
             ),
           ),
           Positioned(
-            bottom: sh(context, 48),
+            bottom: sh(context, 40),
             left: sw(context, 22),
             child: Image.asset(
               PremiumAssets.mascotShhh,
-              height: sh(context, 310).clamp(105, 180),
+              height: sh(context, 330).clamp(120, 190),
               fit: BoxFit.contain,
             ),
           ),
@@ -117,7 +117,7 @@ class _HeroLogo extends StatelessWidget {
                 style: NeonTheme.body(
                   context,
                   language,
-                  size: 35,
+                  size: 38,
                   color: NeonTheme.gold,
                   weight: FontWeight.w900,
                 ),
@@ -173,7 +173,7 @@ class _FeatureGrid extends StatelessWidget {
                   style: NeonTheme.body(
                     context,
                     language,
-                    size: 25,
+                    size: 31,
                     color: NeonTheme.textWhite,
                     weight: FontWeight.w900,
                   ),
@@ -204,14 +204,18 @@ class _HowToPlayButton extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.menu_book_rounded, color: NeonTheme.gold, size: 22),
+          Icon(
+            Icons.menu_book_rounded,
+            color: NeonTheme.gold,
+            size: sp(context, 34),
+          ),
           SizedBox(width: sw(context, 10)),
           Text(
             'How to Play',
             style: NeonTheme.body(
               context,
               AppLanguage.english,
-              size: 24,
+              size: 31,
               color: NeonTheme.textWhite,
               weight: FontWeight.w900,
             ),

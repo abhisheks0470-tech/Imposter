@@ -15,7 +15,8 @@ double sh(BuildContext context, double value) {
 
 double sp(BuildContext context, double value) {
   final size = MediaQuery.sizeOf(context);
-  return value * math.min(size.width / 1080, size.height / 1920);
+  final factor = math.min(size.width / 1080, size.height / 1920);
+  return value * factor.clamp(0.58, 1.05);
 }
 
 class NeonTheme {

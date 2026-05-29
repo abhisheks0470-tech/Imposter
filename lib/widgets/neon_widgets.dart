@@ -27,9 +27,14 @@ class NeonScaffold extends StatelessWidget {
                     sw(context, 42),
                     sh(context, 22),
                     sw(context, 42),
-                    sh(context, 28),
+                    math.max(sh(context, 28), 22),
                   ),
-              child: child,
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 620),
+                  child: child,
+                ),
+              ),
             ),
           ),
         ],
@@ -323,43 +328,47 @@ class NeonButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final primary = variant == NeonButtonVariant.primary;
     final danger = variant == NeonButtonVariant.danger;
+    final success = variant == NeonButtonVariant.success;
     final gradient = primary
         ? NeonTheme.ctaGradient
+        : success
+        ? const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF43F15F), Color(0xFF0F9E31)],
+          )
         : danger
         ? NeonTheme.dangerGradient
         : NeonTheme.purpleGradient;
     final textColor = primary ? const Color(0xFF4B1700) : NeonTheme.textWhite;
+    final glowColor = primary
+        ? NeonTheme.gold
+        : success
+        ? NeonTheme.green
+        : danger
+        ? NeonTheme.dangerRed
+        : NeonTheme.neonPurple;
     return Material(
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(999),
         onTap: onTap,
         child: Ink(
-          height: height ?? sh(context, 112).clamp(52, 64),
+          height: height ?? sh(context, 118).clamp(58, 68),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(999),
             gradient: gradient,
-            image: DecorationImage(
-              image: AssetImage(
-                primary
-                    ? PremiumAssets.buttonPrimary
-                    : danger
-                    ? PremiumAssets.buttonDanger
-                    : PremiumAssets.buttonPurple,
-              ),
-              fit: BoxFit.fill,
-              opacity: 0.9,
-            ),
             border: Border.all(
-              color: primary ? const Color(0xFFFFF0A0) : NeonTheme.neonPurple,
-              width: 1.8,
+              color: primary
+                  ? const Color(0xFFFFF0A0)
+                  : Colors.white.withValues(alpha: 0.48),
+              width: 2,
             ),
             boxShadow: [
               BoxShadow(
-                color: (primary ? NeonTheme.gold : NeonTheme.neonPurple)
-                    .withValues(alpha: 0.55),
-                blurRadius: 20,
-                offset: const Offset(0, 4),
+                color: glowColor.withValues(alpha: 0.62),
+                blurRadius: 22,
+                offset: const Offset(0, 3),
               ),
               const BoxShadow(
                 color: Color(0xCC000000),
@@ -378,7 +387,7 @@ class NeonButton extends StatelessWidget {
                   height: 9,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(999),
-                    color: Colors.white.withValues(alpha: 0.28),
+                    color: Colors.white.withValues(alpha: 0.24),
                   ),
                 ),
               ),
@@ -388,18 +397,19 @@ class NeonButton extends StatelessWidget {
                   children: [
                     if (icon != null) ...[
                       Icon(icon, color: textColor, size: sp(context, 46)),
-                      SizedBox(width: sw(context, 18)),
+                      SizedBox(width: sw(context, 14)),
                     ],
                     Flexible(
                       child: Text(
                         label,
+                        textAlign: TextAlign.center,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: NeonTheme.button(
                           context,
                           language,
                           color: textColor,
-                          size: 42,
+                          size: 40,
                         ),
                       ),
                     ),
@@ -414,7 +424,7 @@ class NeonButton extends StatelessWidget {
   }
 }
 
-enum NeonButtonVariant { primary, purple, danger }
+enum NeonButtonVariant { primary, purple, danger, success }
 
 class GradientText extends StatelessWidget {
   const GradientText(
@@ -480,7 +490,7 @@ class PlayerRow extends StatelessWidget {
               style: NeonTheme.body(
                 context,
                 language,
-                size: 36,
+                size: 40,
                 color: selected ? NeonTheme.gold : NeonTheme.textWhite,
                 weight: FontWeight.w900,
               ),
@@ -555,24 +565,24 @@ class CategoryCard extends StatelessWidget {
       onTap: onTap,
       borderColor: selected ? NeonTheme.gold : NeonTheme.neonPurple,
       padding: EdgeInsets.symmetric(
-        vertical: sh(context, 18),
-        horizontal: sw(context, 12),
+        vertical: sh(context, 14),
+        horizontal: sw(context, 10),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            width: sp(context, 58),
-            height: sp(context, 58),
+            width: sp(context, 86),
+            height: sp(context, 86),
             child: assetPath == null
                 ? Icon(
                     icon,
                     color: selected ? NeonTheme.gold : NeonTheme.neonBlue,
-                    size: sp(context, 54),
+                    size: sp(context, 78),
                   )
                 : Image.asset(assetPath!, fit: BoxFit.contain),
           ),
-          SizedBox(height: sh(context, 8)),
+          SizedBox(height: sh(context, 7)),
           Text(
             label,
             maxLines: 1,
@@ -580,7 +590,7 @@ class CategoryCard extends StatelessWidget {
             style: NeonTheme.body(
               context,
               language,
-              size: 27,
+              size: 31,
               color: NeonTheme.textWhite,
               weight: FontWeight.w900,
             ),
@@ -617,20 +627,23 @@ class RevealCard extends StatelessWidget {
     return NeonCard(
       borderColor: accent,
       glowColor: accent,
+      radius: sp(context, 42),
       padding: EdgeInsets.fromLTRB(
-        sw(context, 30),
+        sw(context, 34),
         sh(context, 28),
-        sw(context, 30),
+        sw(context, 34),
         sh(context, 30),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             label,
+            textAlign: TextAlign.center,
             style: NeonTheme.body(
               context,
               language,
-              size: 33,
+              size: 35,
               color: NeonTheme.textMuted,
               weight: FontWeight.w900,
             ),
@@ -642,38 +655,43 @@ class RevealCard extends StatelessWidget {
               style: NeonTheme.heading(
                 context,
                 language,
-                size: danger ? 86 : 104,
+                size: danger ? 92 : 110,
                 color: accent,
               ),
             ),
           ),
           if (showVisual) ...[
             SizedBox(height: sh(context, 18)),
-            Container(
-              width: sw(context, 230),
-              height: sh(context, 160),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(sp(context, 42)),
-                gradient: RadialGradient(
-                  colors: [accent.withValues(alpha: 0.3), NeonTheme.cardDarker],
-                ),
-                border: Border.all(color: accent, width: 1.8),
-                boxShadow: [
-                  BoxShadow(
-                    color: accent.withValues(alpha: 0.45),
-                    blurRadius: 22,
+            Flexible(
+              child: Container(
+                width: sw(context, 430).clamp(145, 235),
+                height: sh(context, 285).clamp(95, 165),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(sp(context, 42)),
+                  gradient: RadialGradient(
+                    colors: [
+                      accent.withValues(alpha: 0.3),
+                      NeonTheme.cardDarker,
+                    ],
                   ),
-                ],
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(sp(context, 18)),
-                child: visualAsset == null
-                    ? Icon(
-                        icon,
-                        color: accent,
-                        size: sp(context, danger ? 94 : 86),
-                      )
-                    : Image.asset(visualAsset!, fit: BoxFit.contain),
+                  border: Border.all(color: accent, width: 1.8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: accent.withValues(alpha: 0.45),
+                      blurRadius: 22,
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(sp(context, 16)),
+                  child: visualAsset == null
+                      ? Icon(
+                          icon,
+                          color: accent,
+                          size: sp(context, danger ? 94 : 86),
+                        )
+                      : Image.asset(visualAsset!, fit: BoxFit.contain),
+                ),
               ),
             ),
           ],

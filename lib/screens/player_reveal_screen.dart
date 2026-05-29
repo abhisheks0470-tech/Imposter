@@ -57,13 +57,13 @@ class _PlayerRevealScreenState extends State<PlayerRevealScreen> {
             onHelp: () => _showHelpDialog(context),
             onSettings: () => _showSettingsDialog(context),
           ),
-          SizedBox(height: sh(context, 18)),
+          SizedBox(height: sh(context, 12)),
           _Progress(
             language: _language,
             current: _currentIndex + 1,
             total: _players.length,
           ),
-          SizedBox(height: sh(context, 20)),
+          SizedBox(height: sh(context, 14)),
           Expanded(
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 180),
@@ -196,13 +196,17 @@ class _Prompt extends StatelessWidget {
             en: 'Give the phone only to this player',
           ),
         ),
-        RevealCard(
-          language: language,
-          label: nt(language, hi: 'अब बारी है', en: 'Now it is'),
-          value: playerName,
-          icon: Icons.visibility_off_rounded,
-          visualAsset: PremiumAssets.iconLock,
-          showVisual: true,
+        SizedBox(
+          width: double.infinity,
+          height: sh(context, 570).clamp(235, 315),
+          child: RevealCard(
+            language: language,
+            label: nt(language, hi: 'अब बारी है', en: 'Now it is'),
+            value: playerName,
+            icon: Icons.visibility_off_rounded,
+            visualAsset: PremiumAssets.iconLock,
+            showVisual: true,
+          ),
         ),
         NeonButton(
           key: const ValueKey('tap_to_reveal_button'),
@@ -252,24 +256,32 @@ class _Reveal extends StatelessWidget {
           ),
           danger: danger,
         ),
-        RevealCard(
-          language: language,
-          label: isImposter
-              ? nt(language, hi: 'आपका गुप्त रोल है', en: 'Your secret role is')
-              : nt(
-                  language,
-                  hi: 'आपका गुप्त शब्द है',
-                  en: 'Your secret word is',
-                ),
-          value: isImposter
-              ? nt(language, hi: 'इम्पोस्टर', en: 'Imposter')
-              : word.label(language),
-          icon: isImposter ? Icons.question_mark_rounded : word.icon,
-          danger: danger,
-          showVisual: isImposter || showWordImage,
-          visualAsset: isImposter
-              ? PremiumAssets.mascotShhh
-              : _categoryAsset(category),
+        SizedBox(
+          width: double.infinity,
+          height: sh(context, 610).clamp(245, 330),
+          child: RevealCard(
+            language: language,
+            label: isImposter
+                ? nt(
+                    language,
+                    hi: 'आपका गुप्त रोल है',
+                    en: 'Your secret role is',
+                  )
+                : nt(
+                    language,
+                    hi: 'आपका गुप्त शब्द है',
+                    en: 'Your secret word is',
+                  ),
+            value: isImposter
+                ? nt(language, hi: 'इम्पोस्टर', en: 'Imposter')
+                : word.label(language),
+            icon: isImposter ? Icons.question_mark_rounded : word.icon,
+            danger: danger,
+            showVisual: isImposter || showWordImage,
+            visualAsset: isImposter
+                ? PremiumAssets.mascotShhh
+                : _categoryAsset(category),
+          ),
         ),
         if (isImposter)
           _InfoStack(
@@ -314,7 +326,9 @@ class _Reveal extends StatelessWidget {
           label: nt(language, hi: 'समझ गया', en: 'Got it'),
           language: language,
           icon: Icons.visibility_off_rounded,
-          variant: NeonButtonVariant.purple,
+          variant: isImposter
+              ? NeonButtonVariant.danger
+              : NeonButtonVariant.success,
           onTap: onHide,
         ),
       ],
@@ -348,13 +362,17 @@ class _Transition extends StatelessWidget {
             en: 'Previous secret is hidden',
           ),
         ),
-        RevealCard(
-          language: language,
-          label: nt(language, hi: 'अगला खिलाड़ी', en: 'Next Player'),
-          value: nextPlayer,
-          icon: Icons.person_rounded,
-          visualAsset: PremiumAssets.iconUnlock,
-          showVisual: true,
+        SizedBox(
+          width: double.infinity,
+          height: sh(context, 570).clamp(235, 315),
+          child: RevealCard(
+            language: language,
+            label: nt(language, hi: 'अगला खिलाड़ी', en: 'Next Player'),
+            value: nextPlayer,
+            icon: Icons.person_rounded,
+            visualAsset: PremiumAssets.iconUnlock,
+            showVisual: true,
+          ),
         ),
         NeonButton(
           key: const ValueKey('next_player_button'),
@@ -392,13 +410,17 @@ class _Complete extends StatelessWidget {
             en: 'Start the discussion now',
           ),
         ),
-        RevealCard(
-          language: language,
-          label: nt(language, hi: 'रिवील पूरा हुआ', en: 'Reveal Complete'),
-          value: nt(language, hi: 'चर्चा', en: 'Discuss'),
-          icon: Icons.forum_rounded,
-          visualAsset: PremiumAssets.iconCheck,
-          showVisual: true,
+        SizedBox(
+          width: double.infinity,
+          height: sh(context, 570).clamp(235, 315),
+          child: RevealCard(
+            language: language,
+            label: nt(language, hi: 'रिवील पूरा हुआ', en: 'Reveal Complete'),
+            value: nt(language, hi: 'चर्चा', en: 'Discuss'),
+            icon: Icons.forum_rounded,
+            visualAsset: PremiumAssets.iconCheck,
+            showVisual: true,
+          ),
         ),
         NeonButton(
           key: const ValueKey('start_discussion_button'),
@@ -435,7 +457,7 @@ class _HeroTitle extends StatelessWidget {
           style: NeonTheme.heading(
             context,
             language,
-            size: 74,
+            size: 82,
             color: danger ? NeonTheme.dangerRed : NeonTheme.textWhite,
           ),
         ),
@@ -446,7 +468,7 @@ class _HeroTitle extends StatelessWidget {
           style: NeonTheme.body(
             context,
             language,
-            size: 31,
+            size: 35,
             color: danger ? NeonTheme.neonPink : NeonTheme.textMuted,
             weight: FontWeight.w900,
           ),
@@ -492,7 +514,7 @@ class _InfoStack extends StatelessWidget {
                     style: NeonTheme.body(
                       context,
                       language,
-                      size: 25,
+                      size: 30,
                       color: NeonTheme.textWhite,
                       weight: FontWeight.w800,
                     ),
@@ -534,7 +556,7 @@ class _Progress extends StatelessWidget {
             style: NeonTheme.body(
               context,
               language,
-              size: 27,
+              size: 31,
               color: NeonTheme.gold,
               weight: FontWeight.w900,
             ),

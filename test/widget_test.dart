@@ -14,6 +14,7 @@ import 'package:hindi_imposter/screens/voting_screen.dart';
 
 void main() {
   testWidgets('Home actions open How to Play and Game Setup', (tester) async {
+    _usePhoneViewport(tester);
     await _pumpAppPastSplash(tester);
 
     expect(find.byType(HomeScreen), findsOneWidget);
@@ -35,6 +36,7 @@ void main() {
   testWidgets('Setup controls update and open Player Name screen', (
     tester,
   ) async {
+    _usePhoneViewport(tester);
     await _pumpAppPastSplash(tester);
     await tester.tap(find.text('Start Game'));
     await tester.pumpAndSettle();
@@ -68,6 +70,7 @@ void main() {
   });
 
   testWidgets('Player names default and open private reveal', (tester) async {
+    _usePhoneViewport(tester);
     await tester.pumpWidget(
       _testApp(
         PlayerNameScreen(
@@ -93,6 +96,7 @@ void main() {
   testWidgets('Normal reveal hides word before next player prompt', (
     tester,
   ) async {
+    _usePhoneViewport(tester);
     await tester.pumpWidget(
       _testApp(
         PlayerRevealScreen(
@@ -116,6 +120,7 @@ void main() {
   });
 
   testWidgets('Imposter reveal never shows secret word', (tester) async {
+    _usePhoneViewport(tester);
     await tester.pumpWidget(
       _testApp(
         PlayerRevealScreen(
@@ -140,6 +145,7 @@ void main() {
   testWidgets('Last player opens Discussion and Discussion opens Voting', (
     tester,
   ) async {
+    _usePhoneViewport(tester);
     await tester.pumpWidget(
       _testApp(
         PlayerRevealScreen(
@@ -174,6 +180,7 @@ void main() {
   });
 
   testWidgets('Voting validates selection and opens Result', (tester) async {
+    _usePhoneViewport(tester);
     await tester.pumpWidget(
       _testApp(VotingScreen(discussionData: _discussion())),
     );
@@ -202,6 +209,7 @@ void main() {
   testWidgets('Result shows wrong vote and final action buttons work', (
     tester,
   ) async {
+    _usePhoneViewport(tester);
     await tester.pumpWidget(
       _testApp(
         ResultScreen(
@@ -249,6 +257,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(HomeScreen), findsOneWidget);
   });
+}
+
+void _usePhoneViewport(WidgetTester tester) {
+  tester.view.physicalSize = const Size(390, 844);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
 }
 
 Future<void> _pumpAppPastSplash(WidgetTester tester) async {

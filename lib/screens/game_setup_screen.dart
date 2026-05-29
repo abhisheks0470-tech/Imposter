@@ -40,74 +40,78 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
           ),
           SizedBox(height: sh(context, 18)),
           StepperPills(language: language, current: 1),
-          SizedBox(height: sh(context, 18)),
+          SizedBox(height: sh(context, 10)),
           SizedBox(
-            height: sh(context, 230).clamp(78, 125),
+            height: sh(context, 185).clamp(56, 95),
             child: Image.asset(
               PremiumAssets.mascotDetective,
               fit: BoxFit.contain,
             ),
           ),
-          SizedBox(height: sh(context, 10)),
+          SizedBox(height: sh(context, 8)),
           Expanded(
-            child: Column(
-              children: [
-                _CounterCard(
-                  title: nt(language, hi: 'प्लेयर्स', en: 'Players'),
-                  subtitle: nt(
-                    language,
-                    hi: 'कुल कितने खिलाड़ी?',
-                    en: 'How many players?',
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  _CounterCard(
+                    title: nt(language, hi: 'प्लेयर्स', en: 'Players'),
+                    subtitle: nt(
+                      language,
+                      hi: 'कुल कितने खिलाड़ी?',
+                      en: 'How many players?',
+                    ),
+                    value: _players,
+                    icon: Icons.groups_rounded,
+                    decreaseKey: const ValueKey('players_decrease'),
+                    increaseKey: const ValueKey('players_increase'),
+                    canDecrease: _players > _minPlayers,
+                    canIncrease: _players < _maxPlayers,
+                    onDecrease: () {
+                      setState(() {
+                        _players--;
+                        if (_imposters >= _players) {
+                          _imposters = _players - 1;
+                        }
+                      });
+                    },
+                    onIncrease: () => setState(() => _players++),
+                    language: language,
                   ),
-                  value: _players,
-                  icon: Icons.groups_rounded,
-                  decreaseKey: const ValueKey('players_decrease'),
-                  increaseKey: const ValueKey('players_increase'),
-                  canDecrease: _players > _minPlayers,
-                  canIncrease: _players < _maxPlayers,
-                  onDecrease: () {
-                    setState(() {
-                      _players--;
-                      if (_imposters >= _players) {
-                        _imposters = _players - 1;
-                      }
-                    });
-                  },
-                  onIncrease: () => setState(() => _players++),
-                  language: language,
-                ),
-                SizedBox(height: sh(context, 14)),
-                _CounterCard(
-                  title: nt(language, hi: 'इम्पोस्टर', en: 'Imposter'),
-                  subtitle: nt(
-                    language,
-                    hi: 'कितने इम्पोस्टर?',
-                    en: 'How many imposters?',
+                  SizedBox(height: sh(context, 10)),
+                  _CounterCard(
+                    title: nt(language, hi: 'इम्पोस्टर', en: 'Imposter'),
+                    subtitle: nt(
+                      language,
+                      hi: 'कितने इम्पोस्टर?',
+                      en: 'How many imposters?',
+                    ),
+                    value: _imposters,
+                    icon: Icons.masks_rounded,
+                    decreaseKey: const ValueKey('imposters_decrease'),
+                    increaseKey: const ValueKey('imposters_increase'),
+                    canDecrease: _imposters > 1,
+                    canIncrease: _imposters < _maxImposters,
+                    onDecrease: () => setState(() => _imposters--),
+                    onIncrease: () => setState(() => _imposters++),
+                    language: language,
                   ),
-                  value: _imposters,
-                  icon: Icons.masks_rounded,
-                  decreaseKey: const ValueKey('imposters_decrease'),
-                  increaseKey: const ValueKey('imposters_increase'),
-                  canDecrease: _imposters > 1,
-                  canIncrease: _imposters < _maxImposters,
-                  onDecrease: () => setState(() => _imposters--),
-                  onIncrease: () => setState(() => _imposters++),
-                  language: language,
-                ),
-                SizedBox(height: sh(context, 14)),
-                _CategoryStrip(
-                  language: language,
-                  selected: _category,
-                  onChanged: (category) => setState(() => _category = category),
-                ),
-                SizedBox(height: sh(context, 14)),
-                _OptionRow(
-                  language: language,
-                  wordImageEnabled: _wordImageEnabled,
-                  onWordImageChanged: (value) =>
-                      setState(() => _wordImageEnabled = value),
-                ),
-              ],
+                  SizedBox(height: sh(context, 10)),
+                  _CategoryStrip(
+                    language: language,
+                    selected: _category,
+                    onChanged: (category) =>
+                        setState(() => _category = category),
+                  ),
+                  SizedBox(height: sh(context, 10)),
+                  _OptionRow(
+                    language: language,
+                    wordImageEnabled: _wordImageEnabled,
+                    onWordImageChanged: (value) =>
+                        setState(() => _wordImageEnabled = value),
+                  ),
+                ],
+              ),
             ),
           ),
           NeonButton(
@@ -172,7 +176,7 @@ class _CounterCard extends StatelessWidget {
     return NeonCard(
       padding: EdgeInsets.symmetric(
         horizontal: sw(context, 26),
-        vertical: sh(context, 18),
+        vertical: sh(context, 14),
       ),
       child: Row(
         children: [
@@ -184,11 +188,11 @@ class _CounterCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: NeonTheme.title(context, language, size: 38),
+                  style: NeonTheme.title(context, language, size: 42),
                 ),
                 Text(
                   subtitle,
-                  style: NeonTheme.body(context, language, size: 25),
+                  style: NeonTheme.body(context, language, size: 28),
                 ),
               ],
             ),
@@ -207,7 +211,7 @@ class _CounterCard extends StatelessWidget {
               style: NeonTheme.heading(
                 context,
                 AppLanguage.english,
-                size: 68,
+                size: 72,
                 color: NeonTheme.textWhite,
               ),
             ),
@@ -260,7 +264,7 @@ class _CategoryStrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: sh(context, 260).clamp(112, 144),
+      height: sh(context, 440).clamp(235, 310),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -275,7 +279,7 @@ class _CategoryStrip extends StatelessWidget {
               crossAxisCount: 3,
               crossAxisSpacing: sw(context, 12),
               mainAxisSpacing: sh(context, 10),
-              childAspectRatio: 2.55,
+              childAspectRatio: 1,
               children: [
                 for (final category in CategoryOption.values)
                   CategoryCard(
@@ -320,7 +324,7 @@ class _OptionRow extends StatelessWidget {
               children: [
                 Text(
                   nt(language, hi: 'भाषा', en: 'Language'),
-                  style: NeonTheme.title(context, language, size: 32),
+                  style: NeonTheme.title(context, language, size: 36),
                 ),
                 SizedBox(height: sh(context, 12)),
                 Row(
@@ -358,17 +362,40 @@ class _OptionRow extends StatelessWidget {
               children: [
                 Text(
                   nt(language, hi: 'वर्ड इमेज', en: 'Word Image'),
-                  style: NeonTheme.title(context, language, size: 32),
+                  style: NeonTheme.title(context, language, size: 36),
                 ),
                 SizedBox(height: sh(context, 12)),
-                Switch(
-                  key: const ValueKey('word_image_switch'),
-                  value: wordImageEnabled,
-                  activeThumbColor: NeonTheme.gold,
-                  activeTrackColor: NeonTheme.green,
-                  inactiveThumbColor: NeonTheme.textMuted,
-                  inactiveTrackColor: NeonTheme.bgPurple,
-                  onChanged: onWordImageChanged,
+                Row(
+                  children: [
+                    Switch(
+                      key: const ValueKey('word_image_switch'),
+                      value: wordImageEnabled,
+                      activeThumbColor: NeonTheme.gold,
+                      activeTrackColor: NeonTheme.green,
+                      inactiveThumbColor: NeonTheme.textMuted,
+                      inactiveTrackColor: NeonTheme.bgPurple,
+                      onChanged: onWordImageChanged,
+                    ),
+                    SizedBox(width: sw(context, 8)),
+                    Expanded(
+                      child: Text(
+                        wordImageEnabled
+                            ? nt(language, hi: 'चालू', en: 'On')
+                            : nt(language, hi: 'बंद', en: 'Off'),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: NeonTheme.body(
+                          context,
+                          language,
+                          size: 30,
+                          color: wordImageEnabled
+                              ? NeonTheme.green
+                              : NeonTheme.textMuted,
+                          weight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -404,7 +431,7 @@ class _ChoiceButton extends StatelessWidget {
         style: NeonTheme.body(
           context,
           AppLanguage.english,
-          size: 25,
+          size: 30,
           color: active ? NeonTheme.gold : NeonTheme.textWhite,
           weight: FontWeight.w900,
         ),

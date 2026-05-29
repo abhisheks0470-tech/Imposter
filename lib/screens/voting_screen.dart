@@ -35,7 +35,7 @@ class _VotingScreenState extends State<VotingScreen> {
           Text(
             nt(_language, hi: 'वोटिंग शुरू करें', en: 'Start Voting'),
             textAlign: TextAlign.center,
-            style: NeonTheme.heading(context, _language, size: 76),
+            style: NeonTheme.heading(context, _language, size: 84),
           ),
           Text(
             nt(
@@ -47,7 +47,7 @@ class _VotingScreenState extends State<VotingScreen> {
             style: NeonTheme.body(
               context,
               _language,
-              size: 30,
+              size: 34,
               color: NeonTheme.gold,
               weight: FontWeight.w900,
             ),
@@ -69,7 +69,7 @@ class _VotingScreenState extends State<VotingScreen> {
               style: NeonTheme.body(
                 context,
                 _language,
-                size: 25,
+                size: 29,
                 color: NeonTheme.textWhite,
               ),
             ),
@@ -96,7 +96,7 @@ class _VotingScreenState extends State<VotingScreen> {
                         ? Icons.radio_button_checked_rounded
                         : Icons.radio_button_unchecked_rounded,
                     color: selected ? NeonTheme.gold : NeonTheme.textMuted,
-                    size: sp(context, 44),
+                    size: sp(context, 54),
                   ),
                 );
               },
@@ -128,7 +128,6 @@ class _VotingScreenState extends State<VotingScreen> {
                   key: const ValueKey('see_result_button'),
                   label: nt(_language, hi: 'वोट सबमिट करें', en: 'Submit Vote'),
                   language: _language,
-                  icon: Icons.how_to_vote_rounded,
                   onTap: _handleSubmit,
                 ),
               ),
@@ -137,7 +136,6 @@ class _VotingScreenState extends State<VotingScreen> {
                 child: NeonButton(
                   label: nt(_language, hi: 'फिर से सोचें', en: 'Think Again'),
                   language: _language,
-                  icon: Icons.refresh_rounded,
                   variant: NeonButtonVariant.purple,
                   onTap: () => setState(() => _selectedIndex = null),
                 ),
