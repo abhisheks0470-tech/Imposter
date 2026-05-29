@@ -689,7 +689,15 @@ class RevealCard extends StatelessWidget {
                           color: accent,
                           size: sp(context, danger ? 94 : 86),
                         )
-                      : Image.asset(visualAsset!, fit: BoxFit.contain),
+                      : Image.asset(
+                          visualAsset!,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) => Icon(
+                            icon,
+                            color: accent,
+                            size: sp(context, danger ? 94 : 86),
+                          ),
+                        ),
                 ),
               ),
             ),
