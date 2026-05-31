@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../localization/app_language.dart';
 import '../models/game_setup_data.dart';
+import '../navigation/safe_navigation.dart';
 import '../theme/neon_theme.dart';
 import '../widgets/neon_widgets.dart';
 import 'result_screen.dart';
@@ -29,7 +30,7 @@ class _VotingScreenState extends State<VotingScreen> {
           NeonHeader(
             language: _language,
             title: nt(_language, hi: 'वोटिंग', en: 'Voting'),
-            onBack: () => Navigator.of(context).pop(),
+            onBack: () => safeBackOrHome(context),
           ),
           SizedBox(height: sh(context, 20)),
           Text(

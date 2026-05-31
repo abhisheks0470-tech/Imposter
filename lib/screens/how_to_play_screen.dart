@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../localization/app_language.dart';
+import '../navigation/safe_navigation.dart';
 import '../theme/neon_theme.dart';
 import '../theme/premium_assets.dart';
 import '../widgets/neon_widgets.dart';
@@ -17,7 +18,7 @@ class HowToPlayScreen extends StatelessWidget {
         children: [
           NeonHeader(
             language: language,
-            onBack: () => Navigator.of(context).pop(),
+            onBack: () => safeBackOrHome(context),
             title: nt(language, hi: 'हिंदी IMPOSTER', en: 'Hindi Imposter'),
           ),
           SizedBox(height: sh(context, 18)),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../localization/app_language.dart';
 import '../models/game_setup_data.dart';
+import '../navigation/safe_navigation.dart';
 import '../theme/neon_theme.dart';
 import '../theme/premium_assets.dart';
 import '../widgets/neon_widgets.dart';
@@ -31,7 +32,7 @@ class ResultScreen extends StatelessWidget {
           NeonHeader(
             language: _language,
             title: nt(_language, hi: 'रिजल्ट', en: 'Result'),
-            onBack: () => Navigator.of(context).pop(),
+            onBack: () => safeBackOrHome(context),
           ),
           SizedBox(height: sh(context, 10)),
           Text(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../localization/app_language.dart';
 import '../models/game_setup_data.dart';
+import '../navigation/safe_navigation.dart';
 import '../theme/neon_theme.dart';
 import '../theme/premium_assets.dart';
 import '../widgets/neon_widgets.dart';
@@ -58,7 +59,7 @@ class _PlayerRevealScreenState extends State<PlayerRevealScreen> {
           NeonHeader(
             language: _language,
             title: _topTitle,
-            onBack: () => Navigator.of(context).pop(),
+            onBack: () => safeBackOrHome(context),
             onHelp: () => _showHelpDialog(context),
             onSettings: () => _showSettingsDialog(context),
           ),

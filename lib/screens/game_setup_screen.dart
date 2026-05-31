@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../localization/app_language.dart';
 import '../models/game_setup_data.dart';
+import '../navigation/safe_navigation.dart';
 import '../theme/neon_theme.dart';
 import '../theme/premium_assets.dart';
 import '../widgets/neon_widgets.dart';
@@ -35,7 +36,7 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
         children: [
           NeonHeader(
             language: language,
-            onBack: () => Navigator.of(context).pop(),
+            onBack: () => safeBackOrHome(context),
             title: nt(language, hi: 'गेम सेटअप', en: 'Game Setup'),
           ),
           SizedBox(height: sh(context, 18)),
