@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../localization/app_language.dart';
 import '../models/game_setup_data.dart';
+import '../navigation/safe_navigation.dart';
 import '../theme/neon_theme.dart';
 import '../theme/premium_assets.dart';
 import '../widgets/neon_widgets.dart';
@@ -22,7 +23,7 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
 
   int _players = 4;
   int _imposters = 1;
-  CategoryOption _category = CategoryOption.food;
+  CategoryOption _category = CategoryOption.custom;
   bool _wordImageEnabled = true;
 
   int get _maxImposters => math.max(1, _players - 1);
@@ -35,7 +36,7 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
         children: [
           NeonHeader(
             language: language,
-            onBack: () => Navigator.of(context).pop(),
+            onBack: () => safeBackOrHome(context),
             title: nt(language, hi: 'गेम सेटअप', en: 'Game Setup'),
           ),
           SizedBox(height: sh(context, 18)),
@@ -459,7 +460,7 @@ String categoryLabel(CategoryOption category, AppLanguage language) {
     CategoryOption.places => nt(language, hi: 'जगहें', en: 'Places'),
     CategoryOption.movies => nt(language, hi: 'फिल्में', en: 'Movies'),
     CategoryOption.objects => nt(language, hi: 'चीजें', en: 'Objects'),
-    CategoryOption.custom => nt(language, hi: 'कस्टम', en: 'Custom'),
+    CategoryOption.custom => nt(language, hi: 'मिक्स', en: 'Mixed'),
   };
 }
 
@@ -470,7 +471,7 @@ IconData categoryIcon(CategoryOption category) {
     CategoryOption.places => Icons.location_city_rounded,
     CategoryOption.movies => Icons.movie_rounded,
     CategoryOption.objects => Icons.widgets_rounded,
-    CategoryOption.custom => Icons.extension_rounded,
+    CategoryOption.custom => Icons.shuffle_rounded,
   };
 }
 

@@ -20,12 +20,12 @@ workflows:
         script: |
           flutter test
 
-      - name: Build Android APK
+      - name: Build Android App Bundle
         script: |
-          flutter build apk --release
+          flutter build appbundle --release
 
     artifacts:
-      - build/app/outputs/flutter-apk/app-release.apk
+      - build/app/outputs/bundle/release/app-release.aab
 
     publishing:
       email:

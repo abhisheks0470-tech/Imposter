@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../localization/app_language.dart';
 import '../models/game_setup_data.dart';
+import '../navigation/safe_navigation.dart';
 import '../theme/neon_theme.dart';
 import '../widgets/neon_widgets.dart';
 import 'game_setup_screen.dart';
@@ -22,7 +23,7 @@ class DiscussionScreen extends StatelessWidget {
           NeonHeader(
             language: _language,
             title: nt(_language, hi: 'चर्चा', en: 'Discussion'),
-            onBack: () => Navigator.of(context).pop(),
+            onBack: () => safeBackOrHome(context),
           ),
           SizedBox(height: sh(context, 20)),
           Text(
