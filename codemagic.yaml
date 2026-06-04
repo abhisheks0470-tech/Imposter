@@ -20,12 +20,32 @@ workflows:
         script: |
           flutter test
 
+      - name: Set up Android release signing
+        script: |
+          if [ -z "$CM_KEYSTORE" ] || [ -z "$CM_KEYSTORE_PASSWORD" ] || [ -z "$CM_KEY_ALIAS" ] || [ -z "$CM_KEY_PASSWORD" ]; then
+            echo "Missing release signing environment variables."
+            echo "Set CM_KEYSTORE, CM_KEYSTORE_PASSWORD, CM_KEY_ALIAS, and CM_KEY_PASSWORD in Codemagic."
+            exit 1
+          fi
+          echo "$CM_KEYSTORE" | base64 --decode > android/upload-keystore.jks
+          cat > android/key.properties <<EOF
+          storePassword=$CM_KEYSTORE_PASSWORD
+          keyPassword=$CM_KEY_PASSWORD
+          keyAlias=$CM_KEY_ALIAS
+          storeFile=../upload-keystore.jks
+          EOF
+
       - name: Build Android App Bundle
         script: |
           flutter build appbundle --release
 
+      - name: Build Android APK
+        script: |
+          flutter build apk --release
+
     artifacts:
       - build/app/outputs/bundle/release/app-release.aab
+      - build/app/outputs/flutter-apk/app-release.apk
 
     publishing:
       email:

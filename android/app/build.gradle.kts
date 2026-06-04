@@ -51,10 +51,8 @@ android {
 
     buildTypes {
         release {
-            signingConfig = if (hasReleaseKeystore) {
-                signingConfigs.getByName("release")
-            } else {
-                signingConfigs.getByName("debug")
+            if (hasReleaseKeystore) {
+                signingConfig = signingConfigs.getByName("release")
             }
         }
     }
@@ -62,4 +60,12 @@ android {
 
 flutter {
     source = "../.."
+}
+
+gradle.taskGraph.whenReady {
+    if (allTasks.any { task -> task.name.contains("Release") } && !hasReleaseKeystore) {
+        throw GradleException(
+            "Release signing is missing. Create android/key.properties and android/upload-keystore.jks before building release artifacts."
+        )
+    }
 }
